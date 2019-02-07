@@ -56,8 +56,6 @@ public class ReceptionSynchronizer {
         synchronized (barrier) {
             if (barrier.containsKey(m)) {
                 latch = barrier.get(m);
-            } else {
-                barrier.put(m, new CountDownLatch(0));
             }
         }
         if (latch != null) {
@@ -87,6 +85,11 @@ public class ReceptionSynchronizer {
         synchronized (barrier) {
             if (barrier.containsKey(method)) {
                 latch = barrier.get(method);
+                if (latch.getCount() == 0) {
+                    throw new IllegalStateException("The invocation already happened");
+                } else {
+                    throw new IllegalStateException("Sorry, I only serve the first one");
+                }
             } else {
                 latch = new CountDownLatch(1);
                 barrier.put(method, latch);
@@ -96,4 +99,5 @@ public class ReceptionSynchronizer {
             throw new AssertionError("Expected method has not been invoked in " + timeoutInMillis + "ms");
         }
     }
+
 }

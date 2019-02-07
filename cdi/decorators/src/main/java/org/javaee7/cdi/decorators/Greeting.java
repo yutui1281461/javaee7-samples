@@ -43,5 +43,5 @@ package org.javaee7.cdi.decorators;
  * @author Arun Gupta
  */
 public interface Greeting {
-    String greet(String name);
+    public String greet(String name);
 }

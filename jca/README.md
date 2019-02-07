@@ -5,7 +5,6 @@ The [JSR 322](https://jcp.org/en/jsr/detail?id=322) defines a standard architect
 ## Samples ##
 
  - connector-simple
- - mdb-filewatcher
 
 ## How to run
 

@@ -10,7 +10,7 @@
     <name>Java EE 7 Sample: javaee7-samples</name>
 
     <properties>
-        <arquillian.version>1.1.14.Final</arquillian.version>
+	<arquillian.version>1.1.14.Final</arquillian.version>
         <java.min.version>1.7</java.min.version>
         <maven.min.version>3.0.0</maven.min.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,25 +23,19 @@
         <skipJSF>${skipTests}</skipJSF>
         <skipJACC>${skipTests}</skipJACC>
         <skipJMS>${skipTests}</skipJMS>
-        <skipJAXWS>${skipTests}</skipJAXWS>
-        <skipEAR>${skipTests}</skipEAR>
-        
-        <skipServletClientCertificate>${skipTests}</skipServletClientCertificate>
         
         <!-- 
             Application Server versions 
             (these are downloaded and installed in these versions by Maven for the CI profiles)
          -->
-        <payara.version>4.1.2.181</payara.version>
-        <payara_domain>payaradomain</payara_domain>
-        <payara.micro.version>5.182</payara.micro.version>
-        <glassfish.client.version>5.0</glassfish.client.version> <!-- For remote EJB for Payara and Glassfish -->
+        <payara.version>4.1.2.173</payara.version>
+        <payara.micro.version>5.Beta1</payara.micro.version>
         <glassfish.version>4.1.1</glassfish.version>
-        <liberty.version>16.0.0.4</liberty.version>
-        <wildfly.version>13.0.0.Final</wildfly.version>
-        <wildfly.swarm.version>2.0.0.Final</wildfly.swarm.version>
-        <tomee.version>7.0.2</tomee.version>
-        <tomcat.version>9.0.4</tomcat.version>
+        <liberty.version>16.0.0.3</liberty.version>
+        <wildfly.version>10.1.0.Final</wildfly.version>
+        <wildfly.swarm.version>2017.11.0</wildfly.swarm.version>
+        <tomee.version>7.0.1</tomee.version>
+        <tomcat.version>8.5.6</tomcat.version>
     </properties>
     
     <prerequisites>
@@ -64,16 +58,17 @@
         </repository>
 
         <repository>
-            <id>payara-milestones</id>
-            <name>Payara Milestones</name>
+            <id>ossrh</id>
+            <name>Sonatype-snapshot</name>
             
-            <url>https://raw.github.com/payara/Payara_PatchedProjects/master</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
@@ -84,27 +79,28 @@
          are helper modules.
      -->
     <modules>
-        <module>test-utils</module>
-        <module>batch</module>
-        <module>cdi</module>
-        <module>concurrency</module>
-        <module>ejb</module>
-        <module>el</module>
-        <module>interceptor</module>
-        <module>javamail</module>
-        <module>jaspic</module>
-        <module>jacc</module>
-        <module>jaxrs</module>
-        <module>jaxws</module>
-        <module>jca</module>
-        <module>jms</module>
-        <module>jpa</module>
-        <module>jta</module>
-        <module>jsf</module>
-        <module>json</module>
-        <module>servlet</module>
-        <module>validation</module>
-        <module>websocket</module>
+      <module>test-utils</module>
+      <module>batch</module>
+      <module>cdi</module>
+      <module>concurrency</module>
+      <module>ejb</module>
+      <module>el</module>
+      <module>interceptor</module>
+      <module>javamail</module>
+      <module>jaspic</module>
+      <module>jacc</module>
+      <module>jaxrs</module>
+      <module>jaxws</module>
+      <module>jca</module>
+      <module>jms</module>
+      <module>jpa</module>
+      <module>jta</module>
+      <module>jsf</module>
+      <module>json</module>
+      <module>servlet</module>
+      <module>validation</module>
+      <module>websocket</module>
+      <module>util</module>
     </modules>
 
 
@@ -123,15 +119,16 @@
                 <version>${arquillian.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.javaee7</groupId>
+                <artifactId>util</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>1.4.195</version>
-            </dependency>
-            <dependency>
-                <groupId>fish.payara.arquillian</groupId>
-                <artifactId>payara-client-ee7</artifactId>
-                <version>1.0.Beta3-m1</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -219,7 +216,7 @@
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.31</version>
+            <version>2.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -240,25 +237,17 @@
             <version>1.6.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-        	<groupId>org.omnifaces</groupId>
-    		<artifactId>omniutils</artifactId>
-    		<version>0.10</version>
-    		<scope>test</scope>
-        </dependency>
     </dependencies>
 
 
     <build>
         <finalName>${project.artifactId}</finalName>
-        
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-        
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -346,22 +335,42 @@
         <profile>
             <id>payara-ci-managed</id>
             
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            
             <dependencies>
-                 <!-- Java EE based client dependencies to contact a server via WebSocket or REST -->
+                
+                <!-- WebSocket client dependencies -->
                 <dependency>
-                    <groupId>fish.payara.arquillian</groupId>
-                    <artifactId>payara-client-ee7</artifactId>
+                    <groupId>org.glassfish.tyrus</groupId>
+                    <artifactId>tyrus-client</artifactId>
+                    <version>1.13</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.tyrus</groupId>
+                    <artifactId>tyrus-container-grizzly-client</artifactId>
+                    <version>1.13</version>
+                    <scope>test</scope>
+                </dependency>
+            
+            
+	            <!-- JAX-RS client API dependencies -->
+                <dependency>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-json-jackson</artifactId>
+                    <version>2.25.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-json-processing</artifactId>
+                    <version>2.25.1</version>
+                    <scope>test</scope>
                 </dependency>
 
-                <!-- The actual Arquillian connector -->
+                   <!-- The actual Arquillian connector -->
                 <dependency>
                     <groupId>fish.payara.arquillian</groupId>
                     <artifactId>arquillian-payara-server-4-managed</artifactId>
-                    <version>1.0.Beta3-m1</version>
+                    <version>1.0.Beta2</version>
                 </dependency>
             </dependencies>
             
@@ -378,8 +387,6 @@
                                     <goal>unpack</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
-                                    <markersDirectory>${session.executionRootDirectory}/target/dependency-maven-plugin-markers</markersDirectory>
                                     <artifactItems>
                                         <artifactItem>
                                             <groupId>fish.payara.distributions</groupId>
@@ -405,7 +412,6 @@
                             <systemPropertyVariables>
                                 <glassfishRemote_gfHome>${session.executionRootDirectory}/target/payara41</glassfishRemote_gfHome>
                                 <javaEEServer>payara-remote</javaEEServer>
-                                <payara_domain>${payara_domain}</payara_domain>
                                 <arquillian.launch>payara</arquillian.launch>
                             </systemPropertyVariables>
                         </configuration>
@@ -418,29 +424,15 @@
             <id>payara-micro-managed</id>
 
             <properties>
-                <!-- JMS and JAXWS not supported by Micro -->
                 <skipJMS>true</skipJMS>
-                <skipJAXWS>true</skipJAXWS>
-                
-                <!-- Being a WebProfile++, Micro does not support ear archives -->
-                <skipEAR>true</skipEAR>
-                
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
             </properties>
 
             <dependencies>
-                <!-- Java EE based client dependencies to contact a server via WebSocket or REST -->
-                <dependency>
-                    <groupId>fish.payara.arquillian</groupId>
-                    <artifactId>payara-client-ee7</artifactId>
-                </dependency>
-            
                 <!-- The Arquillian connector -->
                 <dependency>
                     <groupId>fish.payara.arquillian</groupId>
-                    <artifactId>arquillian-payara-micro-5-managed</artifactId> 
-                    <version>1.0.Beta3</version>
+                    <artifactId>arquillian-payara-micro-4-managed</artifactId> 
+                    <version>1.0.Beta2</version> 
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -476,10 +468,9 @@
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
-                                <skipEAR>${skipEAR}</skipEAR>
-                                <payara.microJar>${session.executionRootDirectory}/target/payara-micro-${payara.micro.version}.jar</payara.microJar>
-                            </systemProperties>
+                            <environmentVariables>
+                                <MICRO_JAR>${session.executionRootDirectory}/target/payara-micro-${payara.micro.version}.jar</MICRO_JAR>
+                            </environmentVariables>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -488,17 +479,36 @@
         
         <profile>
             <id>payara-embedded</id>
-            
-             <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
-            
             <dependencies>
-                <!-- Java EE based client dependencies to contact a server via WebSocket or REST -->
                 <dependency>
-                    <groupId>fish.payara.arquillian</groupId>
-                        <artifactId>payara-client-ee7</artifactId>
+                    <groupId>fish.payara.extras</groupId>
+                    <artifactId>payara-embedded-all</artifactId>
+                    <version>${payara.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>javax.json</artifactId>
+                    <version>1.0.4</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.tyrus</groupId>
+                    <artifactId>tyrus-client</artifactId>
+                    <version>1.13</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.tyrus</groupId>
+                    <artifactId>tyrus-container-grizzly-client</artifactId>
+                    <version>1.13</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-client</artifactId>
+                    <version>2.25</version>
+                    <scope>test</scope>
                 </dependency>
                 
                 <dependency>
@@ -526,32 +536,60 @@
             <id>payara-remote</id>
             
             <dependencies>
-                <!-- Java EE based client dependencies to contact a server via WebSocket or REST -->
                 <dependency>
-                    <groupId>fish.payara.arquillian</groupId>
-                    <artifactId>payara-client-ee7</artifactId>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>javax.json</artifactId>
+                    <version>1.0.4</version>
+                    <scope>test</scope>
+                </dependency>
+                
+                <!-- WebSocket client dependencies -->
+                <dependency>
+                    <groupId>org.glassfish.tyrus</groupId>
+                    <artifactId>tyrus-client</artifactId>
+                    <version>1.13</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.tyrus</groupId>
+                    <artifactId>tyrus-container-grizzly-client</artifactId>
+                    <version>1.13</version>
+                    <scope>test</scope>
+                </dependency>
+   
+   				<!-- JAX-RS client API dependencies -->
+                <dependency>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-json-jackson</artifactId>
+                    <version>2.25.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-json-processing</artifactId>
+                    <version>2.25.1</version>
+                    <scope>test</scope>
                 </dependency>
                 
                 <!-- The actual Arquillian connector -->
                 <dependency>
-                    <groupId>fish.payara.arquillian</groupId>
+                    <groupId>org.omnifaces</groupId>
                     <artifactId>arquillian-payara-server-4-remote</artifactId> 
-                    <version>1.0.Beta3-m1</version> 
+                    <version>1.0-beta-SNAPSHOT</version> 
                     <scope>test</scope>
                 </dependency>
             </dependencies>
             <build>
-                <plugins>
+                 <plugins>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
                                 <javaEEServer>payara-remote</javaEEServer>
-                                <payara_domain>${payara_domain}</payara_domain>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
-                </plugins>
+                   </plugins>
                 <testResources>
                     <testResource>
                         <directory>src/test/resources</directory>
@@ -571,12 +609,6 @@
         
         <profile>
             <id>glassfish-embedded</id>
-            
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
-            
             <dependencies>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
@@ -705,12 +737,9 @@
     
         <profile>
             <id>wildfly-embedded</id>
-            
             <properties>
                 <serverProfile>standalone-full.xml</serverProfile>
                 <serverRoot>${project.build.directory}/wildfly-${wildfly.version}</serverRoot>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
             </properties>
             <dependencies>
                 <!-- Needed for websocket tests that use ContainerProvider.getWebSocketContainer() 
@@ -824,14 +853,10 @@
         
         <profile>
             <id>wildfly-ci-managed</id>
-            
             <properties>
                 <serverProfile>standalone-full.xml</serverProfile>
                 <serverRoot>${project.build.directory}/wildfly-${wildfly.version}</serverRoot>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
             </properties>
-            
             <dependencies>
                 <!-- Needed for websocket tests that use ContainerProvider.getWebSocketContainer() 
                      to connect from a the client to the websocket server.
@@ -939,11 +964,6 @@
         <profile>
             <id>wildfly-remote</id>
             
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
-            
             <dependencies>
                 <!-- Needed for websocket tests that use ContainerProvider.getWebSocketContainer() 
                      to connect from a the client to the websocket server.
@@ -1009,11 +1029,6 @@
                  
         <profile>
             <id>wildfly-swarm</id>
-            
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
 
             <dependencies>
                 <!-- Needed for websocket tests that use ContainerProvider.getWebSocketContainer()
@@ -1058,7 +1073,7 @@
 
                 <!-- The actual Arquillian container -->
                 <dependency>
-                    <groupId>io.thorntail</groupId>
+                    <groupId>org.wildfly.swarm</groupId>
                     <artifactId>arquillian</artifactId>
                     <version>${wildfly.swarm.version}</version>
                     <scope>test</scope>
@@ -1094,13 +1109,6 @@
         
         <profile>
             <id>tomee-embedded</id>
-            
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
-            
-            
             <dependencies>
                 <dependency>
                     <groupId>org.apache.tomee</groupId>
@@ -1159,11 +1167,6 @@
         
         <profile>
             <id>tomee-ci-managed</id>
-            
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
             
             <repositories>
                 <repository>
@@ -1274,11 +1277,6 @@
         <profile>
             <id>liberty-managed</id> <!-- Can also be used as remote -->
             
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
-            
             <dependencies>
                 <dependency>
                    <groupId>org.jboss.arquillian.container</groupId>
@@ -1335,11 +1333,6 @@
         
         <profile>
             <id>liberty-ci-managed</id>
-            
-            <properties>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
-            </properties>
 
             <dependencies>
                 <dependency>
@@ -1437,9 +1430,6 @@
                 <!-- Default target after having installed developer zip distribution for 
                     WebLogic -->
                 <weblogicRemoteArquillian_target>myserver</weblogicRemoteArquillian_target>
-                
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
             </properties>
 
             <dependencies>
@@ -1482,8 +1472,6 @@
                 <skipCDI>true</skipCDI>
                 <skipJSF>true</skipJSF>
                 <skipJACC>true</skipJACC>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
             </properties> 
     
             <dependencies>
@@ -1518,8 +1506,6 @@
                 <skipCDI>true</skipCDI>
                 <skipJSF>true</skipJSF>
                 <skipJACC>true</skipJACC>
-                <!-- Client-cert needs complicated cert setup, which hasn't been done -->
-                <skipServletClientCertificate>true</skipServletClientCertificate>
             </properties>
             
             <repositories>

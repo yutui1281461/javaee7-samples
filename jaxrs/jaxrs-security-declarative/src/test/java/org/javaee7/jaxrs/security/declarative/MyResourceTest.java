@@ -53,7 +53,7 @@ public class MyResourceTest {
     
     @After
     public void tearDown() {
-        webClient.close();
+        webClient.closeAllWindows();
     }
 
     @Deployment(testable = false)

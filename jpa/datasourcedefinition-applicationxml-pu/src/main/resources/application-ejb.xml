@@ -10,7 +10,7 @@
         </web>
     </module>
     <module>
-        <ejb>testEJB.jar</ejb>
+        <ejb>test.jar</ejb>
     </module>
     
     <data-source>

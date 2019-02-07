@@ -9,7 +9,6 @@
     
     <artifactId>jaxrs</artifactId>
     <packaging>pom</packaging>
-    
     <name>Java EE 7 Sample: jaxrs</name>
 
     <modules>
@@ -18,7 +17,6 @@
         <module>beanvalidation</module>
         <module>beanparam</module>
         <module>client-negotiation</module>
-        <module>db-access</module>
         <module>dynamicfilter</module>
         <module>fileupload</module>
         <module>filter</module>
@@ -37,11 +35,10 @@
         <module>request-binding</module>
         <module>resource-validation</module>
         <module>server-negotiation</module>
-        <module>simple-get</module>
         <module>singleton</module>
         <module>readerwriter-injection</module>
         <module>jaxrs-security-declarative</module>
-        
+        <module>db-access</module>
     </modules>
 
     <dependencies>
@@ -49,7 +46,6 @@
             <groupId>org.javaee7</groupId>
             <artifactId>test-utils</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

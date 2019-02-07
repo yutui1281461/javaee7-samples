@@ -6,7 +6,6 @@ The [JSR 345](https://jcp.org/en/jsr/detail?id=345) is an architecture for the d
 
  - embeddable
  - lifecycle
- - remote
  - singleton
  - stateful
  - stateless
